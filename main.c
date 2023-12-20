@@ -6,7 +6,7 @@
 /*   By: svikornv <svikornv@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 10:21:58 by svikornv          #+#    #+#             */
-/*   Updated: 2023/12/20 13:33:02 by svikornv         ###   ########.fr       */
+/*   Updated: 2023/12/20 14:12:20 by svikornv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 //     struct timeval start_time;
 // } Philosopher;
 
-// void initialize_philosopher(Philosopher *philosopher, int id, pthread_mutex_t *left_fork, pthread_mutex_t *right_fork, int time_to_die, int time_to_eat, int time_to_sleep) {
+// void initialize_philosopher(Philosopher *philosopher, int id, pthread_mutex_t *left_fork, pthread_mutex_t *right_fork, int time_to_die, int time_to_eat, int time_to_sleep, int num_eat) {
 //     philosopher->id = id;
 //     philosopher->left_fork = left_fork;
 //     philosopher->right_fork = right_fork;
@@ -40,6 +40,7 @@
 //     philosopher->num_eat = 0;
 //     gettimeofday(&philosopher->last_meal_time, NULL);
 //     gettimeofday(&philosopher->start_time, NULL);
+//     philosopher->num_eat = num_eat;
 // }
 
 // void print_state(Philosopher *philosopher, const char *state) {
@@ -86,6 +87,7 @@
 
 // void* philosopher_thread(void *arg) {
 //     Philosopher *philosopher = (Philosopher*) arg;
+//     int num_eat = philosopher->num_eat;
 
 //     while (1) {
 //         take_forks(philosopher);
@@ -104,7 +106,7 @@
 //             break;
 //         }
 
-//         if (philosopher->num_eat > 0 && philosopher->num_eat >= num_eat) {
+//         if (num_eat > 0 && philosopher->num_eat >= num_eat) {
 //             break;
 //         }
 //     }
@@ -122,7 +124,7 @@
 //     int time_to_die = atoi(argv[2]);
 //     int time_to_eat = atoi(argv[3]);
 //     int time_to_sleep = atoi(argv[4]);
-//     //int num_eat = (argc == 6) ? atoi(argv[5]) : -1;
+//     int num_eat = (argc == 6) ? atoi(argv[5]) : -1;
 
 //     pthread_t philosophers[num_philosophers];
 //     pthread_mutex_t forks[num_philosophers];
@@ -136,9 +138,8 @@
 
 //     // Initialize philosophers
 //     for (int i = 0; i < num_philosophers; i++) {
-//         initialize_philosopher(&philosophers_data[i], i + 1, &forks[i], &forks[(i + 1) % num_philosophers], time_to_die, time_to_eat,time_to_sleep);
+//         initialize_philosopher(&philosophers_data[i], i + 1, &forks[i], &forks[(i + 1) % num_philosophers], time_to_die, time_to_eat,time_to_sleep, num_eat);
 //     }
-
 //     // Create philosopher threads
 //     for (int i = 0; i < num_philosophers; i++) {
 //         pthread_create(&philosophers[i], NULL, philosopher_thread, &philosophers_data[i]);
@@ -184,10 +185,9 @@ void initialize_philosopher(Philosopher *philosopher, int id, pthread_mutex_t *l
     philosopher->time_to_die = time_to_die;
     philosopher->time_to_eat = time_to_eat;
     philosopher->time_to_sleep = time_to_sleep;
-    philosopher->num_eat = 0;
+    philosopher->num_eat = num_eat;
     gettimeofday(&philosopher->last_meal_time, NULL);
     gettimeofday(&philosopher->start_time, NULL);
-    philosopher->num_eat = num_eat;
 }
 
 void print_state(Philosopher *philosopher, const char *state) {
@@ -285,7 +285,7 @@ int main(int argc, char *argv[]) {
 
     // Initialize philosophers
     for (int i = 0; i < num_philosophers; i++) {
-        initialize_philosopher(&philosophers_data[i], i + 1, &forks[i], &forks[(i + 1) % num_philosophers], time_to_die, time_to_eat,time_to_sleep, num_eat);
+        initialize_philosopher(&philosophers_data[i], i + 1, &forks[i], &forks[(i + 1) % num_philosophers], time_to_die, time_to_eat, time_to_sleep, num_eat);
     }
     // Create philosopher threads
     for (int i = 0; i < num_philosophers; i++) {
